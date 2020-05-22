@@ -1,0 +1,6 @@
+flask
+plotly
+scikit-multiflow
+pandas
+numpy
+matplotlib
