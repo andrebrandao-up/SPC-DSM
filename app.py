@@ -28,11 +28,26 @@ socketio = SocketIO(app, async_mode=None, logger=False, engineio_logger=False)
 
 @app.route('/')
 def index():
-    print("index")
+    """
+    Main webpage.
+
+    Returns
+    -------
+    webpage: string.
+        Html of the main webpage.
+    """
     return render_template('index.html')
 
 @app.route('/simulation')
 def simulation():
+    """
+    Simulation webpage
+
+    Returns
+    -------
+    webpage: string.
+        Html of the simulation webpage.
+    """
     global thread
     global stream_stop_event
     global stream_pause_event
@@ -59,10 +74,22 @@ def simulation():
     return render_template('simulation.html', plot=plot)
 
 def create_plot(model_name, xmax):
-    #N = 40
-    #x = []#np.linspace(0, 1, N)
-    #y = []#np.random.randn(N)
-    #df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
+    """Help function to create the plot.
+
+    Parameters
+    ----------
+    model_name: string.
+        The name of the model to plot.
+
+    xmax: int.
+        The maximum value for the x axis.
+
+    Returns
+    -------
+
+    graphJSON: string.
+        String with the code to create a Plotly graph.
+    """
     data = [go.Scatter( x=[], y=[], name=model_name + " without Change Detection"),
             go.Scatter( x=[], y=[], name=model_name + " with Change Detection")]
     graphJSON = {"data":json.loads(json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder))}
@@ -75,18 +102,20 @@ def create_plot(model_name, xmax):
 
 @app.route('/resume')
 def resume():
+    """ Endpoint to resume the plotting. """
     stream_pause_event.clear()
     stream_stop_event.clear()
     return "True"
 
 @app.route('/pause')
 def pause():
+    """ Endpoint to pause the plotting. """
     stream_pause_event.set()
     return "True"
 
 @app.route('/stop')
 def stop():
-    #stream_pause_event.set()
+    """ Endpoint to stop the plotting. """
     stream_stop_event.set()
     return "True"
 
